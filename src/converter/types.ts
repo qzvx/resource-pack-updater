@@ -1,3 +1,4 @@
+import type { DetectionResult } from './detect';
 import type { SourceVersion, TargetVersion } from './versions';
 
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
@@ -17,8 +18,12 @@ export type ConversionReport = {
 	archived: number;
 	warnings: string[];
 };
-export type ConvertRequest = { file: File; source: SourceVersion; target: TargetVersion };
+export type WorkerRequest =
+	| { type: 'detect'; file: File }
+	| { type: 'convert'; file: File; source: SourceVersion; target: TargetVersion };
+
 export type WorkerResponse =
+	| { type: 'detected'; result: DetectionResult }
 	| { type: 'progress'; progress: Progress }
 	| { type: 'done'; zip: Uint8Array<ArrayBuffer>; report: ConversionReport }
 	| { type: 'error'; message: string };

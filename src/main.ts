@@ -1,7 +1,7 @@
 import './style.css';
 import { TARGETS, type SourceVersion, type TargetVersion } from './converter/versions';
 import { LIMITS } from './converter/pack';
-import { detectVersion, type DetectionResult } from './converter/detect';
+import type { DetectionResult } from './converter/detect';
 import type { ConversionReport, WorkerResponse } from './converter/types';
 
 function element<T extends HTMLElement = HTMLElement>(id: string): T {
@@ -96,14 +96,21 @@ function refresh(): void {
 		statusContainer.hidden = true;
 		convertButton.textContent = 'Add a pack first';
 		convertButton.disabled = true;
-	} else if (detectionResult?.status === 'modern') {
+	} else if (!detectionResult) {
+		statusContainer.hidden = false;
+		detectedBadge.textContent = 'Inspecting pack...';
+		detectedBadge.className = 'detected-badge';
+		overrideBtn.hidden = true;
+		convertButton.textContent = 'Inspecting...';
+		convertButton.disabled = true;
+	} else if (detectionResult.status === 'modern') {
 		statusContainer.hidden = false;
 		detectedBadge.textContent = detectionResult.detail;
 		detectedBadge.className = 'detected-badge modern-notice';
 		overrideBtn.hidden = true;
 		convertButton.textContent = 'Add a 1.7 or 1.8 pack';
 		convertButton.disabled = true;
-	} else if (detectionResult?.status === 'corrupt') {
+	} else if (detectionResult.status === 'corrupt') {
 		statusContainer.hidden = false;
 		detectedBadge.textContent = 'Invalid ZIP archive';
 		detectedBadge.className = 'detected-badge error-badge';
@@ -180,21 +187,21 @@ async function chooseFile(next: File | undefined): Promise<void> {
 		return;
 	}
 	file = next;
+	detectionResult = undefined;
 	userOverrode = false;
+	refresh();
 
+	worker?.terminate();
+	worker = undefined;
 	try {
-		const buffer = await file.arrayBuffer();
-		detectionResult = detectVersion(new Uint8Array(buffer), file.name);
-		if (detectionResult.status === 'supported') {
-			source = detectionResult.version;
-			isConfident = detectionResult.confident;
-		}
+		const w = initWorker();
+		w.postMessage({ type: 'detect', file });
 	} catch {
 		detectionResult = { status: 'supported', version: '1.8', confident: false };
 		source = '1.8';
 		isConfident = false;
+		refresh();
 	}
-	refresh();
 }
 
 fileInput.addEventListener('change', () => {
@@ -270,6 +277,42 @@ element('cancel').addEventListener('click', () => {
 	showError('Conversion cancelled.');
 });
 
+function initWorker(): Worker {
+	if (worker) return worker;
+	worker = new Worker(new URL('./converter/worker.ts', import.meta.url), { type: 'module' });
+	worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+		const message = event.data;
+		if (message.type === 'detected') {
+			detectionResult = message.result;
+			if (detectionResult.status === 'supported') {
+				source = detectionResult.version;
+				isConfident = detectionResult.confident;
+			}
+			refresh();
+			return;
+		}
+		if (message.type === 'progress') {
+			element<HTMLProgressElement>('progress').value = message.progress.percent;
+			element('progress-percent').textContent = `${message.progress.percent}%`;
+			element('progress-stage').textContent = message.progress.stage;
+		} else if (message.type === 'error') {
+			stop();
+			element('progress-section').hidden = true;
+			showError(message.message);
+		} else if (message.type === 'done') {
+			stop();
+			element('progress-section').hidden = true;
+			showResult(message.zip, message.report);
+		}
+	};
+	worker.onerror = () => {
+		stop();
+		element('progress-section').hidden = true;
+		showError("Couldn't read this ZIP. Make sure it's an uncorrupted Java resource pack.");
+	};
+	return worker;
+}
+
 convertButton.addEventListener('click', () => {
 	if (!file || converting) return;
 	clearResult();
@@ -277,29 +320,8 @@ convertButton.addEventListener('click', () => {
 	refresh();
 	element('progress-section').hidden = false;
 	try {
-		worker = new Worker(new URL('./converter/worker.ts', import.meta.url), { type: 'module' });
-		worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
-			const message = event.data;
-			if (message.type === 'progress') {
-				element<HTMLProgressElement>('progress').value = message.progress.percent;
-				element('progress-percent').textContent = `${message.progress.percent}%`;
-				element('progress-stage').textContent = message.progress.stage;
-			} else if (message.type === 'error') {
-				stop();
-				element('progress-section').hidden = true;
-				showError(message.message);
-			} else {
-				stop();
-				element('progress-section').hidden = true;
-				showResult(message.zip, message.report);
-			}
-		};
-		worker.onerror = () => {
-			stop();
-			element('progress-section').hidden = true;
-			showError("Couldn't read this ZIP. Make sure it's an uncorrupted Java resource pack.");
-		};
-		worker.postMessage({ file, source, target });
+		const w = initWorker();
+		w.postMessage({ type: 'convert', file, source, target });
 	} catch {
 		stop();
 		element('progress-section').hidden = true;

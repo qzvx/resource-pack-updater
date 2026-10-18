@@ -1,14 +1,22 @@
 /// <reference lib="webworker" />
 import { convert } from './convert';
-import type { ConvertRequest, WorkerResponse } from './types';
+import { detectVersion } from './detect';
+import type { WorkerRequest, WorkerResponse } from './types';
 
 const worker = self as DedicatedWorkerGlobalScope;
 function send(message: WorkerResponse, transfer: Transferable[] = []): void {
 	worker.postMessage(message, transfer);
 }
-worker.onmessage = async (event: MessageEvent<ConvertRequest>) => {
+worker.onmessage = async (event: MessageEvent<WorkerRequest>) => {
 	try {
-		const { file, source, target } = event.data;
+		const req = event.data;
+		if (req.type === 'detect') {
+			const data = new Uint8Array(await req.file.arrayBuffer());
+			const result = detectVersion(data, req.file.name);
+			send({ type: 'detected', result });
+			return;
+		}
+		const { file, source, target } = req;
 		const data = new Uint8Array(await file.arrayBuffer());
 		const result = convert(data, source, target, (progress) =>
 			send({ type: 'progress', progress }),
