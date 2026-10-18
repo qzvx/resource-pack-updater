@@ -49,6 +49,16 @@ npm run preview
 
 Found a pack that converts wrong or a bug in the tool? [Open an issue](https://github.com/qzvx/resource-pack-updater/issues) and attach the pack if you can.
 
+## Star History
+
+<a href="https://star-history.com/#qzvx/resource-pack-updater&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=qzvx/resource-pack-updater&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=qzvx/resource-pack-updater&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=qzvx/resource-pack-updater&type=Date" />
+ </picture>
+</a>
+
 ## Sources and attribution
 
 - Forward conversion mappings and logic derive from [agentdid127/ResourcePackConverter](https://github.com/agentdid127/ResourcePackConverter) and Hypixel Inc. See [LICENSE](LICENSE) and [Hypixel notice](public/HYPIXEL-LICENSE).
