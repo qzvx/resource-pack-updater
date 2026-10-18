@@ -1,137 +1,158 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#111111" />
-    <meta
-      name="description"
-      content="Convert old Minecraft Java 1.7 and 1.8 resource packs to newer versions."
-    />
-    <title>Resource Pack Updater</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20shape-rendering='crispEdges'%3E%3Cpath%20fill='%23FFC466'%20d='M7%201h2v1h-2zM5%202h6v1h-6zM3%203h10v1h-10zM1%204h14v1h-14zM3%205h10v1h-10zM5%206h6v1h-6zM7%207h2v1h-2z'/%3E%3Cpath%20fill='%23F5A524'%20d='M1%205h2v1h-2zM1%206h4v1h-4zM1%207h6v1h-6zM1%208h7v1h-7zM1%209h7v1h-7zM1%2010h7v1h-7zM1%2011h7v1h-7zM3%2012h5v1h-5zM5%2013h3v1h-3zM7%2014h1v1h-1z'/%3E%3Cpath%20fill='%23B86510'%20d='M13%205h2v1h-2zM11%206h4v1h-4zM9%207h6v1h-6zM8%208h7v1h-7zM8%209h7v1h-7zM8%2010h7v1h-7zM8%2011h7v1h-7zM8%2012h5v1h-5zM8%2013h3v1h-3zM8%2014h1v1h-1z'/%3E%3C/svg%3E"
-    />
-  </head>
-  <body>
-    <div class="app-wrap">
-      <header class="tool-header">
-        <h1 class="tool-title">Minecraft Resource Pack Updater</h1>
-        <p class="tool-subtitle">Convert old Minecraft Java 1.7 and 1.8 resource packs to newer versions.</p>
-      </header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#111111" />
+		<meta
+			name="description"
+			content="Convert old Minecraft Java 1.7 and 1.8 resource packs to newer versions."
+		/>
+		<title>Resource Pack Updater</title>
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%20shape-rendering='crispEdges'%3E%3Cpath%20fill='%23FFC466'%20d='M7%201h2v1h-2zM5%202h6v1h-6zM3%203h10v1h-10zM1%204h14v1h-14zM3%205h10v1h-10zM5%206h6v1h-6zM7%207h2v1h-2z'/%3E%3Cpath%20fill='%23F5A524'%20d='M1%205h2v1h-2zM1%206h4v1h-4zM1%207h6v1h-6zM1%208h7v1h-7zM1%209h7v1h-7zM1%2010h7v1h-7zM1%2011h7v1h-7zM3%2012h5v1h-5zM5%2013h3v1h-3zM7%2014h1v1h-1z'/%3E%3Cpath%20fill='%23B86510'%20d='M13%205h2v1h-2zM11%206h4v1h-4zM9%207h6v1h-6zM8%208h7v1h-7zM8%209h7v1h-7zM8%2010h7v1h-7zM8%2011h7v1h-7zM8%2012h5v1h-5zM8%2013h3v1h-3zM8%2014h1v1h-1z'/%3E%3C/svg%3E"
+		/>
+	</head>
+	<body>
+		<div class="app-wrap">
+			<header class="tool-header">
+				<h1 class="tool-title">Minecraft Resource Pack Updater</h1>
+				<p class="tool-subtitle">
+					Convert old Minecraft Java 1.7 and 1.8 resource packs to newer versions.
+				</p>
+			</header>
 
-      <main class="converter-main">
-        <div class="converter-box">
-          <div class="converter-cols">
-            <div class="col-file">
-              <label id="drop-zone" class="drop-zone" for="pack-file">
-                <input
-                  type="file"
-                  id="pack-file"
-                  accept=".zip,application/zip,application/x-zip-compressed"
-                />
-                <span class="upload-icon" aria-hidden="true">
-                  <svg viewBox="0 0 32 32">
-                    <path d="M16 21V7m-5 5 5-5 5 5M6 21v5h20v-5" />
-                  </svg>
-                </span>
-                <strong id="file-label">Drop your resource pack here</strong>
-                <span id="file-description"
-                  >or <span class="browse-text">browse files</span> to choose a ZIP</span
-                >
-                <span class="file-limit">ZIP, up to 256 MB</span>
-              </label>
+			<main class="converter-main">
+				<div class="converter-box">
+					<div class="converter-cols">
+						<div class="col-file">
+							<label id="drop-zone" class="drop-zone" for="pack-file">
+								<input
+									type="file"
+									id="pack-file"
+									accept=".zip,application/zip,application/x-zip-compressed"
+								/>
+								<span class="upload-icon" aria-hidden="true">
+									<svg viewBox="0 0 32 32">
+										<path d="M16 21V7m-5 5 5-5 5 5M6 21v5h20v-5" />
+									</svg>
+								</span>
+								<strong id="file-label">Drop your resource pack here</strong>
+								<span id="file-description"
+									>or <span class="browse-text">browse files</span> to choose a ZIP</span
+								>
+								<span class="file-limit">ZIP, up to 256 MB</span>
+							</label>
 
-              <div id="selected-file" class="selected-file" hidden>
-                <span class="file-symbol" aria-hidden="true">ZIP</span>
-                <div class="file-meta">
-                  <strong id="file-name"></strong>
-                  <span id="file-size"></span>
-                </div>
-                <button
-                  id="remove-file"
-                  class="icon-button"
-                  type="button"
-                  aria-label="Remove selected file"
-                >
-                  ×
-                </button>
-              </div>
+							<div id="selected-file" class="selected-file" hidden>
+								<span class="file-symbol" aria-hidden="true">ZIP</span>
+								<div class="file-meta">
+									<strong id="file-name"></strong>
+									<span id="file-size"></span>
+								</div>
+								<button
+									id="remove-file"
+									class="icon-button"
+									type="button"
+									aria-label="Remove selected file"
+								>
+									×
+								</button>
+							</div>
 
-              <div id="file-version-status" class="file-version-status" hidden>
-                <span id="detected-badge" class="detected-badge">Detected: 1.8</span>
-                <button type="button" id="override-btn" class="override-btn">wrong? use 1.7</button>
-              </div>
-            </div>
+							<div id="file-version-status" class="file-version-status" hidden>
+								<span id="detected-badge" class="detected-badge">Detected: 1.8</span>
+								<button type="button" id="override-btn" class="override-btn">wrong? use 1.7</button>
+							</div>
+						</div>
 
-            <div class="col-version">
-              <label class="field-label" id="version-label">Pick the version you're upgrading to</label>
-              <div id="versions" class="version-options" role="radiogroup" aria-labelledby="version-label"></div>
-            </div>
-          </div>
+						<div class="col-version">
+							<label class="field-label" id="version-label"
+								>Pick the version you're upgrading to</label
+							>
+							<div
+								id="versions"
+								class="version-options"
+								role="radiogroup"
+								aria-labelledby="version-label"
+							></div>
+						</div>
+					</div>
 
-          <div id="action-area" class="action-area">
-            <button id="convert" class="primary-button" type="button" disabled>
-              Add a pack first
-            </button>
-          </div>
+					<div id="action-area" class="action-area">
+						<button id="convert" class="primary-button" type="button" disabled>
+							Add a pack first
+						</button>
+					</div>
 
-          <section
-            id="progress-section"
-            class="progress-section"
-            aria-label="Conversion progress"
-            hidden
-          >
-            <div class="progress-top">
-              <span id="progress-stage" role="status">Opening your pack</span>
-              <span id="progress-percent">0%</span>
-            </div>
-            <progress id="progress" max="100" value="0">0%</progress>
-            <button id="cancel" class="text-button" type="button">Cancel</button>
-          </section>
+					<section
+						id="progress-section"
+						class="progress-section"
+						aria-label="Conversion progress"
+						hidden
+					>
+						<div class="progress-top">
+							<span id="progress-stage" role="status">Opening your pack</span>
+							<span id="progress-percent">0%</span>
+						</div>
+						<progress id="progress" max="100" value="0">0%</progress>
+						<button id="cancel" class="text-button" type="button">Cancel</button>
+					</section>
 
-          <div id="error" class="error-message" role="alert" hidden></div>
+					<div id="error" class="error-message" role="alert" hidden></div>
 
-          <section id="result" class="result" aria-labelledby="result-title" hidden>
-            <div class="result-top">
-              <span class="success-icon" aria-hidden="true">✓</span>
-              <div>
-                <h2 id="result-title">Your pack is ready.</h2>
-                <p id="result-description"></p>
-              </div>
-            </div>
-            <div id="result-stats" class="result-stats"></div>
-            <div id="result-notes" hidden>
-              <details>
-                <summary id="notes-summary"></summary>
-                <ul id="warning-list"></ul>
-              </details>
-            </div>
-            <div class="download-actions">
-              <a id="download" class="primary-button" download>
-                Download pack
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5" />
-                </svg>
-              </a>
-              <button id="start-again" class="text-button" type="button">Convert another</button>
-            </div>
-          </section>
-        </div>
+					<section id="result" class="result" aria-labelledby="result-title" hidden>
+						<div class="result-top">
+							<span class="success-icon" aria-hidden="true">✓</span>
+							<div>
+								<h2 id="result-title">Your pack is ready.</h2>
+								<p id="result-description"></p>
+							</div>
+						</div>
+						<div id="result-stats" class="result-stats"></div>
+						<div id="result-notes" hidden>
+							<details>
+								<summary id="notes-summary"></summary>
+								<ul id="warning-list"></ul>
+							</details>
+						</div>
+						<div class="download-actions">
+							<a id="download" class="primary-button" download>
+								Download pack
+								<svg viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5" />
+								</svg>
+							</a>
+							<button id="start-again" class="text-button" type="button">Convert another</button>
+						</div>
+					</section>
+				</div>
 
-        <p class="privacy-note">
-          Runs entirely in your browser. Your files never leave your computer.
-        </p>
+				<p class="privacy-note">
+					Runs entirely in your browser. Your files never leave your computer.
+				</p>
 
-        <footer class="tool-footer">
-          <p>
-            Based on <a href="https://github.com/agentdid127/ResourcePackConverter" target="_blank" rel="noopener noreferrer">ResourcePackConverter</a> by agentdid127 &amp; Hypixel (<a href="/LICENSE.txt">license</a>) and <a href="https://github.com/Mojang/slicer" target="_blank" rel="noopener noreferrer">Mojang Slicer</a> (<a href="/MOJANG-SLICER-LICENSE.txt">license</a>). Not affiliated with Mojang or Microsoft.
-          </p>
-          <p class="build-info"><!-- BUILD_INFO --></p>
-        </footer>
-      </main>
-    </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+				<footer class="tool-footer">
+					<p>
+						Based on
+						<a
+							href="https://github.com/agentdid127/ResourcePackConverter"
+							target="_blank"
+							rel="noopener noreferrer"
+							>ResourcePackConverter</a
+						>
+						by agentdid127 &amp; Hypixel (<a href="/LICENSE.txt">license</a>) and
+						<a href="https://github.com/Mojang/slicer" target="_blank" rel="noopener noreferrer"
+							>Mojang Slicer</a
+						>
+						(<a href="/MOJANG-SLICER-LICENSE.txt">license</a>). Not affiliated with Mojang or
+						Microsoft.
+					</p>
+					<p class="build-info"><!-- BUILD_INFO --></p>
+				</footer>
+			</main>
+		</div>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>

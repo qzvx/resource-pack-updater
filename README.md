@@ -17,16 +17,16 @@ Everything runs locally in a Web Worker. Your pack is never uploaded to a server
 
 Converts 1.7 and 1.8 packs to any of these versions:
 
-| Target | Resource pack format |
-| --- | --- |
-| 26.3 | 97.1 |
-| 26.2 | 88.0 |
-| 26.1 | 84.0 |
-| 1.21.11 | 75.0 |
-| 1.20.6 | 32 |
-| 1.19.4 | 13 |
-| 1.16.5 | 6 |
-| 1.12.2 | 3 |
+| Target  | Resource pack format |
+| ------- | -------------------- |
+| 26.3    | 97.1                 |
+| 26.2    | 88.0                 |
+| 26.1    | 84.0                 |
+| 1.21.11 | 75.0                 |
+| 1.20.6  | 32                   |
+| 1.19.4  | 13                   |
+| 1.16.5  | 6                    |
+| 1.12.2  | 3                    |
 
 ## Run locally
 
