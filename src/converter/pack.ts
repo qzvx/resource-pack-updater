@@ -14,7 +14,7 @@ function safePath(path: string): string {
 	if (
 		clean.startsWith('/') ||
 		/^[a-z]:/i.test(clean) ||
-		clean.split('/').some((part) => part === '..') ||
+		clean.split('/').some((part) => part === '..' || part === '__proto__') ||
 		clean.includes('\0')
 	) {
 		throw new Error(

@@ -207,7 +207,7 @@ function modernItem(pack: Pack, path: string, json: JsonObject, target: Target):
 					angle: 'minecraft:compass',
 					time: 'minecraft:time',
 				};
-				if (ranges[property]) {
+				if (Object.hasOwn(ranges, property)) {
 					const dispatch: JsonObject = {
 						type: 'minecraft:range_dispatch',
 						property: ranges[property],
