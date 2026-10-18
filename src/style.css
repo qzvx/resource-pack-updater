@@ -344,6 +344,7 @@ p {
 /* Detected / Assumed status & subtle override link */
 .file-version-status {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 8px;
 	margin-top: 10px;
@@ -598,6 +599,22 @@ progress::-moz-progress-bar {
 	color: var(--error-text);
 	font-size: 12.5px;
 	line-height: 1.5;
+}
+
+.issue-link {
+	color: inherit;
+	font-size: 11px;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.issue-link:hover {
+	color: var(--accent);
+}
+
+.error-message .issue-link {
+	display: block;
+	margin-top: 6px;
 }
 
 /* Result Section: Replaces action bar on completion */

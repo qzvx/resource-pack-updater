@@ -26,7 +26,7 @@ let urls: string[] = [];
 let converting = false;
 let isConfident = false;
 let userOverrode = false;
-let detectionResult: DetectionResult | undefined;
+let detectionResult: DetectionResult | { status: 'failed'; detail: string } | undefined;
 
 for (const version of TARGETS) {
 	const label = document.createElement('label');
@@ -75,6 +75,7 @@ overrideBtn.addEventListener('click', () => {
 
 function refresh(): void {
 	const isDone = !element('result').hidden;
+	element('detection-issue-link').hidden = !file || !detectionResult;
 	element('action-area').hidden = isDone || converting;
 	// convertButton disabled state and text are set in the file branches below
 	fileInput.disabled = converting || isDone;
@@ -103,6 +104,13 @@ function refresh(): void {
 		overrideBtn.hidden = true;
 		convertButton.textContent = 'Inspecting...';
 		convertButton.disabled = true;
+	} else if (detectionResult.status === 'failed') {
+		statusContainer.hidden = false;
+		detectedBadge.textContent = 'Inspection failed';
+		detectedBadge.className = 'detected-badge error-badge';
+		overrideBtn.hidden = true;
+		convertButton.textContent = 'Retry inspection';
+		convertButton.disabled = converting || isDone;
 	} else if (detectionResult.status === 'modern') {
 		statusContainer.hidden = false;
 		detectedBadge.textContent = detectionResult.detail;
@@ -155,13 +163,36 @@ function clearResult(): void {
 }
 
 function showError(message: string): void {
-	element('error').textContent = message;
+	element('error-text').textContent = message;
 	element('error').hidden = false;
+}
+
+function inspectFile(): void {
+	if (!file) return;
+	clearResult();
+	detectionResult = undefined;
+	userOverrode = false;
+	isConfident = false;
+	source = '1.8';
+	stop();
+	try {
+		initWorker().postMessage({ type: 'detect', file });
+	} catch {
+		failWorker('Could not start pack inspection. Try again or open this in a current browser.');
+	}
+}
+
+function failWorker(message: string): void {
+	if (file && !detectionResult) detectionResult = { status: 'failed', detail: message };
+	stop();
+	element('progress-section').hidden = true;
+	showError(message);
 }
 
 async function chooseFile(next: File | undefined): Promise<void> {
 	if (converting || !next) return;
 	clearResult();
+	stop();
 	if (!/\.zip$/i.test(next.name)) {
 		file = undefined;
 		detectionResult = undefined;
@@ -187,21 +218,7 @@ async function chooseFile(next: File | undefined): Promise<void> {
 		return;
 	}
 	file = next;
-	detectionResult = undefined;
-	userOverrode = false;
-	refresh();
-
-	worker?.terminate();
-	worker = undefined;
-	try {
-		const w = initWorker();
-		w.postMessage({ type: 'detect', file });
-	} catch {
-		detectionResult = { status: 'supported', version: '1.8', confident: false };
-		source = '1.8';
-		isConfident = false;
-		refresh();
-	}
+	inspectFile();
 }
 
 fileInput.addEventListener('change', () => {
@@ -248,6 +265,7 @@ element('remove-file').addEventListener('click', () => {
 	userOverrode = false;
 	isConfident = false;
 	source = '1.8';
+	stop();
 	clearResult();
 	refresh();
 	fileInput.focus();
@@ -259,6 +277,7 @@ element('start-again').addEventListener('click', () => {
 	userOverrode = false;
 	isConfident = false;
 	source = '1.8';
+	stop();
 	clearResult();
 	refresh();
 	fileInput.focus();
@@ -279,8 +298,12 @@ element('cancel').addEventListener('click', () => {
 
 function initWorker(): Worker {
 	if (worker) return worker;
-	worker = new Worker(new URL('./converter/worker.ts', import.meta.url), { type: 'module' });
-	worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+	const currentWorker = new Worker(new URL('./converter/worker.ts', import.meta.url), {
+		type: 'module',
+	});
+	worker = currentWorker;
+	currentWorker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+		if (worker !== currentWorker) return;
 		const message = event.data;
 		if (message.type === 'detected') {
 			detectionResult = message.result;
@@ -296,25 +319,30 @@ function initWorker(): Worker {
 			element('progress-percent').textContent = `${message.progress.percent}%`;
 			element('progress-stage').textContent = message.progress.stage;
 		} else if (message.type === 'error') {
-			stop();
-			element('progress-section').hidden = true;
-			showError(message.message);
+			failWorker(message.message);
 		} else if (message.type === 'done') {
 			stop();
 			element('progress-section').hidden = true;
 			showResult(message.zip, message.report);
 		}
 	};
-	worker.onerror = () => {
-		stop();
-		element('progress-section').hidden = true;
-		showError("Couldn't read this ZIP. Make sure it's an uncorrupted Java resource pack.");
+	currentWorker.onerror = () => {
+		if (worker !== currentWorker) return;
+		failWorker(
+			detectionResult
+				? "Couldn't read this ZIP. Make sure it's an uncorrupted Java resource pack."
+				: "Couldn't inspect this pack. Try again or choose another ZIP.",
+		);
 	};
-	return worker;
+	return currentWorker;
 }
 
 convertButton.addEventListener('click', () => {
 	if (!file || converting) return;
+	if (detectionResult?.status === 'failed') {
+		inspectFile();
+		return;
+	}
 	clearResult();
 	converting = true;
 	refresh();

@@ -64,6 +64,15 @@
 							<div id="file-version-status" class="file-version-status" hidden>
 								<span id="detected-badge" class="detected-badge">Detected: 1.8</span>
 								<button type="button" id="override-btn" class="override-btn">wrong? use 1.7</button>
+								<a
+									id="detection-issue-link"
+									class="issue-link"
+									href="https://github.com/qzvx/resource-pack-updater/issues"
+									target="_blank"
+									rel="noopener noreferrer"
+									hidden
+									>Report a problem on GitHub</a
+								>
 							</div>
 						</div>
 
@@ -100,7 +109,16 @@
 						<button id="cancel" class="text-button" type="button">Cancel</button>
 					</section>
 
-					<div id="error" class="error-message" role="alert" hidden></div>
+					<div id="error" class="error-message" role="alert" hidden>
+						<span id="error-text"></span>
+						<a
+							class="issue-link"
+							href="https://github.com/qzvx/resource-pack-updater/issues"
+							target="_blank"
+							rel="noopener noreferrer"
+							>Report a problem on GitHub</a
+						>
+					</div>
 
 					<section id="result" class="result" aria-labelledby="result-title" hidden>
 						<div class="result-top">
@@ -115,6 +133,13 @@
 							<details>
 								<summary id="notes-summary"></summary>
 								<ul id="warning-list"></ul>
+								<a
+									class="issue-link"
+									href="https://github.com/qzvx/resource-pack-updater/issues"
+									target="_blank"
+									rel="noopener noreferrer"
+									>Report a problem on GitHub</a
+								>
 							</details>
 						</div>
 						<div class="download-actions">
