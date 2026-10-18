@@ -148,14 +148,26 @@ async function chooseFile(next: File | undefined): Promise<void> {
 	if (converting || !next) return;
 	clearResult();
 	if (!/\.zip$/i.test(next.name)) {
+		file = undefined;
+		detectionResult = undefined;
+		userOverrode = false;
+		refresh();
 		showError("That file isn't a ZIP. Choose a .zip Minecraft resource pack.");
 		return;
 	}
 	if (next.size > LIMITS.zip) {
+		file = undefined;
+		detectionResult = undefined;
+		userOverrode = false;
+		refresh();
 		showError('This ZIP is too large (over 256 MB). Pick a pack under 256 MB.');
 		return;
 	}
 	if (next.size < 22) {
+		file = undefined;
+		detectionResult = undefined;
+		userOverrode = false;
+		refresh();
 		showError('This ZIP file is empty or incomplete. Choose a valid pack.');
 		return;
 	}
@@ -247,7 +259,7 @@ function stop(): void {
 element('cancel').addEventListener('click', () => {
 	stop();
 	clearResult();
-	element('hint-text').textContent = 'Conversion cancelled.';
+	showError('Conversion cancelled.');
 });
 
 convertButton.addEventListener('click', () => {
