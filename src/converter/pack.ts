@@ -48,7 +48,7 @@ export class Pack {
 							'This pack exceeds the browser limit of 30,000 files or 512 MB when unpacked.',
 						);
 					}
-					return !entry.name.endsWith('/');
+					return !entry.name.replaceAll('\\', '/').endsWith('/');
 				},
 			});
 		} catch (error) {
@@ -59,7 +59,12 @@ export class Pack {
 			);
 		}
 		const normalized = new Map<string, Uint8Array>();
+		let actualExpanded = 0;
 		for (const [path, bytes] of Object.entries(entries)) {
+			actualExpanded += bytes.byteLength;
+			if (bytes.byteLength > LIMITS.entry || actualExpanded > LIMITS.expanded) {
+				throw new Error('This pack exceeds the browser limit of 512 MB when unpacked.');
+			}
 			const clean = safePath(path);
 			if (clean.startsWith('__MACOSX/') || clean.endsWith('/.DS_Store') || clean === '.DS_Store')
 				continue;
