@@ -28,6 +28,7 @@
 		"fflate": "^0.8.2"
 	},
 	"devDependencies": {
+		"@types/node": "^26.6.5",
 		"prettier": "^3.9.10",
 		"typescript": "~5.9.3",
 		"vite": "^7.1.12",
