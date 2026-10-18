@@ -178,14 +178,14 @@ export class Pack {
 		this.report.warnings = [...this.notices];
 		this.report.outputFiles = this.files.size + (this.files.has('conversion-report.json') ? 0 : 1);
 		this.files.set('conversion-report.json', strToU8(JSON.stringify(this.report, null, 2) + '\n'));
-		const output: Unzipped = Object.create(null) as Unzipped;
+		const output: Record<string, Uint8Array> = Object.create(null);
 		let size = 0;
 		for (const [path, bytes] of this.files) {
 			size += bytes.byteLength;
 			if (size > LIMITS.expanded)
 				throw new Error('The converted pack exceeds the 512 MB browser limit. Try a smaller pack.');
-			output[path] = new Uint8Array(bytes);
+			output[path] = bytes;
 		}
-		return { zip: new Uint8Array(zipSync(output, { level: 6 })), report: this.report };
+		return { zip: zipSync(output, { level: 6 }), report: this.report };
 	}
 }
