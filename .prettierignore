@@ -1,0 +1,7 @@
+node_modules
+dist
+.npm-cache
+test-results
+src/converter/data
+package-lock.json
+public/*LICENSE*

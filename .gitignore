@@ -1,0 +1,11 @@
+node_modules/
+.npm-cache/
+dist/
+*.local
+test-results/
+.vite/
+.vitest/
+.vitest-cache/
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,1240 @@
+{
+  "block/beacon": {
+    "parent": "minecraft:block/block"
+  },
+  "block/big_dripleaf": {
+    "parent": "minecraft:block/block"
+  },
+  "block/big_dripleaf_full_tilt": {
+    "parent": "minecraft:block/block"
+  },
+  "block/big_dripleaf_partial_tilt": {
+    "parent": "minecraft:block/block"
+  },
+  "block/big_dripleaf_stem": {
+    "parent": "minecraft:block/block"
+  },
+  "block/block": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "ground": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          3,
+          0
+        ],
+        "scale": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "on_shelf": {
+        "rotation": [
+          0,
+          180,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "thirdperson_righthand": {
+        "rotation": [
+          75,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          2.5,
+          0
+        ],
+        "scale": [
+          0.375,
+          0.375,
+          0.375
+        ]
+      },
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      },
+      "firstperson_lefthand": {
+        "rotation": [
+          0,
+          225,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    },
+    "gui_light": "side"
+  },
+  "block/button_inventory": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cactus": {
+    "parent": "minecraft:block/block"
+  },
+  "block/calibrated_sculk_sensor": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "head": {
+        "rotation": [
+          0,
+          -180,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [
+          75,
+          -45,
+          0
+        ],
+        "translation": [
+          0,
+          2.5,
+          0
+        ],
+        "scale": [
+          0.375,
+          0.375,
+          0.375
+        ]
+      }
+    },
+    "gui_light": "front",
+    "parent": "minecraft:block/block"
+  },
+  "block/campfire_off": {
+    "display": {
+      "head": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          10.5,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/carpet": {
+    "parent": "minecraft:block/thin_block"
+  },
+  "block/chiseled_bookshelf": {
+    "parent": "minecraft:block/block"
+  },
+  "block/chiseled_bookshelf_inventory": {
+    "parent": "minecraft:block/block"
+  },
+  "block/chorus_plant": {
+    "parent": "minecraft:block/block"
+  },
+  "block/composter": {
+    "parent": "minecraft:block/block"
+  },
+  "block/crafter": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cube": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cube_column_horizontal": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cube_column_uv_locked_x": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cube_column_uv_locked_y": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cube_column_uv_locked_z": {
+    "parent": "minecraft:block/block"
+  },
+  "block/cube_directional": {
+    "parent": "minecraft:block/block"
+  },
+  "block/custom_fence_inventory": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "on_shelf": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/dead_sea_pickle": {
+    "parent": "minecraft:block/block"
+  },
+  "block/dirt_path": {
+    "parent": "minecraft:block/block"
+  },
+  "block/dragon_egg": {
+    "parent": "minecraft:block/block"
+  },
+  "block/dried_ghast": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          0.4,
+          1.6,
+          0
+        ],
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/dried_kelp_block": {
+    "parent": "minecraft:block/block"
+  },
+  "block/enchanting_table": {
+    "parent": "minecraft:block/block"
+  },
+  "block/end_portal_frame": {
+    "parent": "minecraft:block/block"
+  },
+  "block/end_rod": {
+    "display": {
+      "head": {
+        "rotation": [
+          -60,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          5,
+          -9
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "thirdperson_righthand": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.375,
+          0.375,
+          0.375
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/fence_inventory": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "on_shelf": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/four_dead_sea_pickles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/four_sea_pickles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/grass_block": {
+    "parent": "minecraft:block/block"
+  },
+  "block/grindstone": {
+    "parent": "minecraft:block/block"
+  },
+  "block/heavy_core": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          0,
+          3,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "ground": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          3,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          180,
+          0
+        ],
+        "translation": [
+          0,
+          4,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "thirdperson_righthand": {
+        "rotation": [
+          45,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          3,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    }
+  },
+  "block/honey_block": {
+    "parent": "minecraft:block/block"
+  },
+  "block/leaves": {
+    "parent": "minecraft:block/block"
+  },
+  "block/lectern": {
+    "display": {
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      },
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.6,
+          0.6,
+          0.6
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/mangrove_propagule_hanging_0": {
+    "parent": "minecraft:block/block"
+  },
+  "block/mangrove_propagule_hanging_1": {
+    "parent": "minecraft:block/block"
+  },
+  "block/mangrove_propagule_hanging_2": {
+    "parent": "minecraft:block/block"
+  },
+  "block/mangrove_propagule_hanging_3": {
+    "parent": "minecraft:block/block"
+  },
+  "block/mangrove_propagule_hanging_4": {
+    "parent": "minecraft:block/block"
+  },
+  "block/mangrove_roots": {
+    "parent": "minecraft:block/block"
+  },
+  "block/observer": {
+    "parent": "minecraft:block/block"
+  },
+  "block/orientable_with_bottom": {
+    "display": {
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    }
+  },
+  "block/powder_snow": {
+    "parent": "minecraft:block/block"
+  },
+  "block/pressure_plate_up": {
+    "parent": "minecraft:block/thin_block"
+  },
+  "block/pumpkin": {
+    "display": {
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    }
+  },
+  "block/scaffolding_stable": {
+    "parent": "minecraft:block/block"
+  },
+  "block/scaffolding_unstable": {
+    "parent": "minecraft:block/block"
+  },
+  "block/sculk_sensor": {
+    "parent": "minecraft:block/block"
+  },
+  "block/sea_pickle": {
+    "parent": "minecraft:block/block"
+  },
+  "block/slab": {
+    "parent": "minecraft:block/block"
+  },
+  "block/slime_block": {
+    "parent": "minecraft:block/block"
+  },
+  "block/small_dripleaf_bottom": {
+    "parent": "minecraft:block/block"
+  },
+  "block/small_dripleaf_top": {
+    "parent": "minecraft:block/block"
+  },
+  "block/snow_height2": {
+    "parent": "minecraft:block/thin_block"
+  },
+  "block/spore_blossom": {
+    "parent": "minecraft:block/block"
+  },
+  "block/stairs": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "head": {
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [
+          75,
+          -135,
+          0
+        ],
+        "translation": [
+          0,
+          2.5,
+          0
+        ],
+        "scale": [
+          0.375,
+          0.375,
+          0.375
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/stonecutter": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_anvil": {
+    "display": {
+      "fixed": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "on_shelf": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_azalea": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_campfire": {
+    "display": {
+      "head": {
+        "translation": [
+          0,
+          10.5,
+          0
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_candle": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_chain": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_chorus_flower": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_custom_fence_gate": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          -1,
+          0
+        ],
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ]
+      },
+      "head": {
+        "translation": [
+          0,
+          -3,
+          -6
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_daylight_detector": {
+    "parent": "minecraft:block/thin_block"
+  },
+  "block/template_farmland": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_fence_gate": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          -1,
+          0
+        ],
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ]
+      },
+      "head": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          -3,
+          -6
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_four_candles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_four_turtle_eggs": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_glazed_terracotta": {
+    "display": {
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    }
+  },
+  "block/template_hanging_lantern": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_lantern": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_lightning_rod": {
+    "display": {
+      "head": {
+        "rotation": [
+          -180,
+          0,
+          0
+        ],
+        "translation": [
+          8.5,
+          4,
+          0
+        ]
+      },
+      "thirdperson_righthand": {
+        "translation": [
+          0,
+          2,
+          0.5
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_orientable_trapdoor_bottom": {
+    "parent": "minecraft:block/thin_block"
+  },
+  "block/template_potted_azalea_bush": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_sculk_shrieker": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_seagrass": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_body": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          2.5,
+          -1.5,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          -4
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_center": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_inventory": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          2.5,
+          -1.5,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          -4
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "on_shelf": {
+        "rotation": [
+          0,
+          180,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          4
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          -2,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "thirdperson_righthand": {
+        "rotation": [
+          75,
+          135,
+          0
+        ],
+        "translation": [
+          -3,
+          1,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_left": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_right": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_unconnected": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_shelf_unpowered": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_three_candles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_three_turtle_eggs": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_trapdoor_bottom": {
+    "parent": "minecraft:block/thin_block"
+  },
+  "block/template_turtle_egg": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_two_candles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_two_turtle_eggs": {
+    "parent": "minecraft:block/block"
+  },
+  "block/template_vault": {
+    "parent": "minecraft:block/block"
+  },
+  "block/thin_block": {
+    "display": {
+      "thirdperson_righthand": {
+        "rotation": [
+          75,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          2.5,
+          2
+        ],
+        "scale": [
+          0.375,
+          0.375,
+          0.375
+        ]
+      },
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          45,
+          0
+        ],
+        "translation": [
+          0,
+          4.2,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      },
+      "firstperson_lefthand": {
+        "rotation": [
+          0,
+          225,
+          0
+        ],
+        "translation": [
+          0,
+          4.2,
+          0
+        ],
+        "scale": [
+          0.4,
+          0.4,
+          0.4
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  },
+  "block/three_dead_sea_pickles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/three_sea_pickles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/two_dead_sea_pickles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/two_sea_pickles": {
+    "parent": "minecraft:block/block"
+  },
+  "block/wall_inventory": {
+    "display": {
+      "gui": {
+        "rotation": [
+          30,
+          135,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.625,
+          0.625,
+          0.625
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "on_shelf": {
+        "rotation": [
+          0,
+          90,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "parent": "minecraft:block/block"
+  }
+}

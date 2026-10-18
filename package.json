@@ -1,0 +1,36 @@
+{
+	"name": "resource-pack-updater",
+	"version": "1.0.0",
+	"description": "Convert old Minecraft Java 1.7 and 1.8 resource packs to newer versions in your browser.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/qzvx/resource-pack-updater.git"
+	},
+	"bugs": {
+		"url": "https://github.com/qzvx/resource-pack-updater/issues"
+	},
+	"homepage": "https://github.com/qzvx/resource-pack-updater#readme",
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+	},
+	"scripts": {
+		"dev": "vite --host 127.0.0.1",
+		"build": "tsc --noEmit && vite build",
+		"preview": "vite preview --host 127.0.0.1",
+		"test": "vitest run",
+		"format": "prettier --write .",
+		"format:check": "prettier --check ."
+	},
+	"dependencies": {
+		"fast-png": "^8.0.0",
+		"fflate": "^0.8.2"
+	},
+	"devDependencies": {
+		"prettier": "^3.9.10",
+		"typescript": "~5.9.3",
+		"vite": "^7.1.12",
+		"vitest": "^5.0.5"
+	}
+}
