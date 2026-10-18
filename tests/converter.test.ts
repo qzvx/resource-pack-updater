@@ -226,6 +226,24 @@ describe('legacy models and names', () => {
 		expect(model.textures.side).toBe('minecraft:block/quartz_pillar_side');
 		expect(model.elements[0]).toEqual({ shade_direction_override: 'up' });
 	});
+	it('marks predicate overrides with property toString as unsupported', () => {
+		const { zip, report } = convert(
+			fixture({
+				[root + 'models/item/diamond_sword.json']: json({
+					parent: 'item/handheld',
+					textures: { layer0: 'items/diamond_sword' },
+					overrides: [{ predicate: { toString: 1 }, model: 'item/sword_custom' }],
+				}),
+			}),
+			'1.8',
+			'26.1',
+		);
+		const files = unzipSync(zip);
+		expect(report.warnings.some((w) => w.includes('manual port'))).toBe(true);
+		expect(files['converter_legacy/' + root + 'models/item/diamond_sword.json']).toBeDefined();
+		const itemDefinition = parse(files[root + 'items/diamond_sword.json']);
+		expect(JSON.stringify(itemDefinition)).not.toContain('function');
+	});
 });
 
 describe('image conversion', () => {
@@ -326,6 +344,41 @@ describe('image conversion', () => {
 			output = sheet.canvas(2, 2);
 		sheet.copy(output, 0, 0, 2, 2, 0, 0, 'xy');
 		expect([...output.data.slice(0, 4)]).toEqual([4, 0, 0, 255]);
+	});
+	it('Sheet.copy with flip xy produces byte-identical output to original flip behavior', () => {
+		const width = 4,
+			height = 4;
+		const data = new Uint8Array(width * height * 4);
+		for (let i = 0; i < data.length; i++) {
+			data[i] = (i * 7 + 13) & 0xff;
+		}
+		const image = { width, height, data };
+		const sheet = new Sheet(image, width, height);
+		const fastOutput = sheet.canvas(width, height);
+		sheet.copy(fastOutput, 0, 0, width, height, 0, 0, 'xy');
+
+		const expected = new Uint8Array(width * height * 4);
+		for (let py = 0; py < height; py++) {
+			for (let px = 0; px < width; px++) {
+				const srcIdx = ((height - py - 1) * width + (width - px - 1)) * 4;
+				const dstIdx = (py * width + px) * 4;
+				expected[dstIdx] = data[srcIdx];
+				expected[dstIdx + 1] = data[srcIdx + 1];
+				expected[dstIdx + 2] = data[srcIdx + 2];
+				expected[dstIdx + 3] = data[srcIdx + 3];
+			}
+		}
+		expect(fastOutput.data).toEqual(expected);
+	});
+	it('Sheet.copy with scanline optimization preserves exact RGBA pixel data across 16x16 and 32x32 sprites', () => {
+		for (const dim of [16, 32]) {
+			const data = new Uint8Array(dim * dim * 4);
+			for (let i = 0; i < data.length; i++) data[i] = (i * 13 + 37) & 0xff;
+			const sheet = new Sheet({ width: dim, height: dim, data }, dim, dim);
+			const out = sheet.canvas(dim, dim);
+			sheet.copy(out, 0, 0, dim, dim, 0, 0, 'none');
+			expect(out.data).toEqual(data);
+		}
 	});
 });
 
@@ -432,6 +485,9 @@ describe('ZIP validation', () => {
 		expect(() => convert(fixture({ '../evil.txt': strToU8('bad') }), '1.8', '26.1')).toThrow(
 			/unsafe/,
 		);
+		expect(() =>
+			convert(fixture({ 'assets/__proto__/stone.json': strToU8('{}') }), '1.8', '26.1'),
+		).toThrow(/unsafe/);
 	});
 	it('checks advertised decompressed size before inflating', () => {
 		const input = fixture();
@@ -441,6 +497,14 @@ describe('ZIP validation', () => {
 				break;
 			}
 		expect(() => convert(input, '1.8', '26.1')).toThrow(/limit/);
+	});
+	it('Pack.finish returns valid decompressable ZIP without redundant buffer duplication', () => {
+		const input = fixture();
+		const { zip, report } = convert(input, '1.8', '26.1');
+		const files = unzipSync(zip);
+		expect(files['pack.mcmeta']).toBeDefined();
+		expect(files['conversion-report.json']).toBeDefined();
+		expect(report.outputFiles).toBe(Object.keys(files).length);
 	});
 	it('rejects unsupported target and source versions', () => {
 		expect(() => convert(fixture(), '1.8', '1.9')).toThrow(/supported target/);
@@ -518,6 +582,26 @@ describe('detectVersionFromZip', () => {
 		expect(result.status).toBe('modern');
 		if (result.status === 'modern') {
 			expect(result.detail).toContain('modern block and item texture folders');
+		}
+	});
+	it('detects modern pack format when pack.mcmeta has a leading UTF-8 BOM', () => {
+		const bomMcmeta = strToU8('\uFEFF' + JSON.stringify({ pack: { pack_format: 15 } }));
+		const pack = zipSync({
+			'pack.mcmeta': bomMcmeta,
+		});
+		const result = detectVersion(pack);
+		expect(result.status).toBe('modern');
+		if (result.status === 'modern') {
+			expect(result.format).toBe(15);
+		}
+	});
+
+	it('returns status: "corrupt" for invalid ZIP bytes in detectVersion', () => {
+		const invalidBytes = strToU8('not a valid zip archive');
+		const result = detectVersion(invalidBytes);
+		expect(result.status).toBe('corrupt');
+		if (result.status === 'corrupt') {
+			expect(result.detail).toContain('could not be read as an unencrypted ZIP');
 		}
 	});
 });
