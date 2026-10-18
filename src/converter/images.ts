@@ -130,18 +130,33 @@ export class Sheet {
 			ty + h > output.height
 		)
 			throw new Error('Texture slice is outside the image.');
-		for (let py = 0; py < h; py++)
-			for (let px = 0; px < w; px++) {
-				const input =
-					((sy + (flip === 'none' ? py : h - py - 1)) * this.image.width +
-						sx +
-						(flip === 'xy' ? w - px - 1 : px)) *
-					4;
-				output.data.set(
-					this.image.data.subarray(input, input + 4),
-					((ty + py) * output.width + tx + px) * 4,
-				);
+		if (flip === 'none') {
+			const rowBytes = w * 4;
+			for (let py = 0; py < h; py++) {
+				const srcOffset = ((sy + py) * this.image.width + sx) * 4;
+				const dstOffset = ((ty + py) * output.width + tx) * 4;
+				output.data.set(this.image.data.subarray(srcOffset, srcOffset + rowBytes), dstOffset);
 			}
+			return;
+		}
+		const src32 = new Uint32Array(
+			this.image.data.buffer,
+			this.image.data.byteOffset,
+			this.image.width * this.image.height,
+		);
+		const dst32 = new Uint32Array(
+			output.data.buffer,
+			output.data.byteOffset,
+			output.width * output.height,
+		);
+		for (let py = 0; py < h; py++) {
+			const srcY = sy + h - py - 1;
+			const dstY = ty + py;
+			for (let px = 0; px < w; px++) {
+				const srcX = sx + (flip === 'xy' ? w - px - 1 : px);
+				dst32[dstY * output.width + tx + px] = src32[srcY * this.image.width + srcX];
+			}
+		}
 	}
 	crop(x: number, y: number, width: number, height: number): Raster {
 		const output = this.canvas(width, height);
