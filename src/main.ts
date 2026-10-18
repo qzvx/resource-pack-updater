@@ -103,6 +103,14 @@ function refresh(): void {
 		overrideBtn.hidden = true;
 		convertButton.textContent = 'Add a 1.7 or 1.8 pack';
 		convertButton.disabled = true;
+	} else if (detectionResult?.status === 'corrupt') {
+		statusContainer.hidden = false;
+		detectedBadge.textContent = 'Invalid ZIP archive';
+		detectedBadge.className = 'detected-badge error-badge';
+		overrideBtn.hidden = true;
+		convertButton.textContent = 'Choose a valid ZIP';
+		convertButton.disabled = true;
+		showError(detectionResult.detail);
 	} else {
 		statusContainer.hidden = false;
 		detectedBadge.className = 'detected-badge';

@@ -15,6 +15,10 @@ export type DetectionResult =
 			status: 'modern';
 			format?: number;
 			detail: string;
+	  }
+	| {
+			status: 'corrupt';
+			detail: string;
 	  };
 
 export function formatToVersionName(format: number): string {
@@ -83,13 +87,16 @@ export function detectVersion(data: Uint8Array, filename = ''): DetectionResult 
 			}
 		}
 	} catch {
-		return { status: 'supported', version: '1.8', confident: false };
+		return {
+			status: 'corrupt',
+			detail: 'This file could not be read as an unencrypted ZIP archive.',
+		};
 	}
 
 	// Check pack.mcmeta first
 	if (mcmetaBytes) {
 		try {
-			const parsed = JSON.parse(strFromU8(mcmetaBytes));
+			const parsed = JSON.parse(strFromU8(mcmetaBytes).replace(/^\uFEFF/, ''));
 			if (parsed && typeof parsed === 'object') {
 				const pack = parsed.pack;
 				let formatNum: number | undefined;
