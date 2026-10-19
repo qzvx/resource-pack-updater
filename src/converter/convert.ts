@@ -6,6 +6,7 @@ import { convertTextures, finishTextures, finishInventory } from './textures';
 import { sliceAtlases } from './slices';
 import { modernAssets, convertAtlases } from './modern';
 import { convertSigns } from './signs';
+import { convertCactus } from './cactus';
 import { getTarget, type SourceVersion } from './versions';
 import type { Progress } from './types';
 
@@ -29,6 +30,7 @@ export function convert(
 			() => {
 				convertModels(pack, target);
 				convertBlockstates(pack, target);
+				convertCactus(pack, target);
 			},
 		],
 		['Converting texture layouts', () => convertTextures(pack, target)],

@@ -418,6 +418,142 @@ describe('legacy models and names', () => {
 	});
 });
 
+describe('low-resolution cactus corners', () => {
+	function side(width: number, frames = 1): Uint8Array {
+		const data = new Uint8Array(width * width * frames * 4);
+		for (let y = 0; y < width * frames; y++)
+			for (let x = 0; x < width; x++) {
+				const opaque = (x > 0 && x < width - 1) || (y % 2 === 1 && x === 0);
+				data.set([20, 120, 30, opaque ? 255 : 0], (y * width + x) * 4);
+			}
+		return new Uint8Array(encode({ width, height: width * frames, data, channels: 4 }));
+	}
+	function legacyModel() {
+		return {
+			ambientocclusion: false,
+			textures: {
+				side: 'blocks/cactus_side',
+				top: 'blocks/cactus_top',
+				bottom: 'blocks/cactus_bottom',
+			},
+			elements: [
+				{
+					from: [0, 0, 0],
+					to: [16, 16, 16],
+					faces: {
+						down: { uv: [0, 0, 16, 16], texture: '#bottom', cullface: 'down' },
+						up: { uv: [0, 0, 16, 16], texture: '#top', cullface: 'up' },
+					},
+				},
+				{
+					from: [0, 0, 1],
+					to: [16, 16, 15],
+					faces: {
+						north: { uv: [0, 0, 16, 16], texture: '#side' },
+						south: { uv: [0, 0, 16, 16], texture: '#side' },
+					},
+				},
+				{
+					from: [1, 0, 0],
+					to: [15, 16, 16],
+					faces: {
+						west: { uv: [0, 0, 16, 16], texture: '#side' },
+						east: { uv: [0, 0, 16, 16], texture: '#side' },
+					},
+				},
+			],
+		};
+	}
+	for (const target of TARGETS)
+		for (const source of ['1.7', '1.8'] as const)
+			it(`joins all four opaque corners for ${source} to ${target.id}`, () => {
+				const texture = side(8);
+				const files = unzipSync(
+					convert(
+						fixture({
+							[root + 'textures/blocks/cactus_side.png']: texture,
+							...(source === '1.8'
+								? { [root + 'models/block/cactus.json']: json(legacyModel()) }
+								: {}),
+						}),
+						source,
+						target.id,
+					).zip,
+				);
+				const model = parse(files[root + 'models/block/cactus.json']);
+				const [, ns, ew] = model.elements;
+				const span = (element: { from: number[]; to: number[] }, axis: number) => {
+					const pixel = (element.to[axis] - element.from[axis]) / 8;
+					return [element.from[axis] + pixel, element.to[axis] - pixel];
+				};
+				// Each perpendicular plane meets both ends of the opaque texture body.
+				expect([ew.from[0], ew.to[0]]).toEqual(span(ns, 0));
+				expect([ns.from[2], ns.to[2]]).toEqual(span(ew, 2));
+				for (const element of [ns, ew])
+					for (const face of Object.values(element.faces) as { uv: number[] }[])
+						expect(face.uv).toEqual([0, 0, 16, 16]);
+				const folder = target.id === '1.12.2' ? 'blocks' : 'block';
+				expect(files[root + `textures/${folder}/cactus_side.png`]).toEqual(texture);
+			});
+	it('supports 4-pixel textures and animated 8-pixel textures without altering their pixels or metadata', () => {
+		for (const [width, frames] of [
+			[4, 1],
+			[8, 2],
+		]) {
+			const texture = side(width, frames);
+			const metadata = json({ animation: { frametime: 3 } });
+			const files = unzipSync(
+				convert(
+					fixture({
+						[root + 'textures/blocks/cactus_side.png']: texture,
+						[root + 'textures/blocks/cactus_side.png.mcmeta']: metadata,
+					}),
+					'1.7',
+					'26.1',
+				).zip,
+			);
+			expect(parse(files[root + 'models/block/cactus.json']).elements[1].from[2]).toBe(16 / width);
+			expect(files[root + 'textures/block/cactus_side.png']).toEqual(texture);
+			expect(files[root + 'textures/block/cactus_side.png.mcmeta']).toEqual(metadata);
+		}
+	});
+	it('leaves normal-resolution, opaque and intentionally hollow artwork alone', () => {
+		for (const texture of [side(16), side(32), png(8, 8), png(8, 8, [0, 0, 0, 0])]) {
+			const files = unzipSync(
+				convert(
+					fixture({
+						[root + 'textures/blocks/cactus_side.png']: texture,
+					}),
+					'1.7',
+					'26.1',
+				).zip,
+			);
+			expect(files[root + 'models/block/cactus.json']).toBeUndefined();
+		}
+	});
+	it('preserves custom cactus geometry, UVs and texture references', () => {
+		const shape = legacyModel();
+		shape.elements[1].from[2] = 3;
+		const uv = legacyModel();
+		uv.elements[1].faces.north!.uv = [2, 0, 14, 16];
+		const customTexture = legacyModel();
+		customTexture.textures.side = 'custom:cactus';
+		for (const model of [shape, uv, customTexture]) {
+			const files = unzipSync(
+				convert(
+					fixture({
+						[root + 'textures/blocks/cactus_side.png']: side(8),
+						[root + 'models/block/cactus.json']: json(model),
+					}),
+					'1.8',
+					'26.1',
+				).zip,
+			);
+			expect(parse(files[root + 'models/block/cactus.json']).elements).toEqual(model.elements);
+		}
+	});
+});
+
 describe('image conversion', () => {
 	it('decodes indexed alpha, grayscale row padding, and RGB transparency', () => {
 		const decodeFixture = (base64: string) =>
