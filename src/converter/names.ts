@@ -8,6 +8,13 @@ type Tables = Record<string, Record<string, string>>;
 const blockTables: Tables = blocks;
 const itemTables: Tables = items;
 const stages = ['1_13', '1_14', '1_17', '1_19', '1_20_3'];
+// Item model names can differ from both block model and item texture names.
+const itemModelNames: Record<string, string> = {
+	brick: 'brick',
+	brick_block: 'bricks',
+	netherbrick: 'nether_brick',
+	nether_brick: 'nether_bricks',
+};
 const clean = (value: string) => value.toLowerCase().replace(/[()]/g, '').replaceAll(' ', '_');
 
 export function mapName(
@@ -20,8 +27,12 @@ export function mapName(
 	for (const stage of stages) {
 		if (!atLeast(target, stage.replaceAll('_', '.'))) continue;
 		if (model && kind === 'item' && stage === '1_13')
-			mapped = blockTables[stage]?.[mapped] ?? mapped;
-		mapped = (kind === 'block' ? blockTables : itemTables)[stage]?.[mapped] ?? mapped;
+			mapped =
+				itemModelNames[mapped] ??
+				blockTables[stage]?.[mapped] ??
+				itemTables[stage]?.[mapped] ??
+				mapped;
+		else mapped = (kind === 'block' ? blockTables : itemTables)[stage]?.[mapped] ?? mapped;
 	}
 	if (atLeast(target, '1.14') && kind === 'item' && mapped === 'sign') mapped = 'oak_sign';
 	if (

@@ -107,6 +107,11 @@ describe('legacy models and names', () => {
 						textures: { layer0: 'items/diamond_sword', particle: '#layer0' },
 						display: {
 							firstperson: { rotation: [0, 0, 0], translation: [0, 4, 2], scale: [1, 1, 1] },
+							thirdperson: {
+								rotation: [0, 90, -35],
+								translation: [0, 1.25, -3.5],
+								scale: [0.85, 0.85, 0.85],
+							},
 						},
 					}),
 				}),
@@ -119,9 +124,176 @@ describe('legacy models and names', () => {
 		expect(model.textures.particle).toBe('#layer0');
 		expect(model.display.firstperson_righthand.translation).toEqual([1.13, 3.2, 1.13]);
 		expect(model.display.firstperson_lefthand.rotation).toEqual([0, -45, 0]);
+		expect(model.display.thirdperson_righthand).toEqual({
+			rotation: [0, -90, 55],
+			translation: [0, 4, 0.5],
+			scale: [0.85, 0.85, 0.85],
+		});
+		expect(model.display.thirdperson_lefthand.rotation).toEqual([0, 90, -55]);
 		expect(parse(files[root + 'items/diamond_sword.json']).model.model).toBe(
 			'minecraft:item/diamond_sword',
 		);
+	});
+	for (const target of TARGETS) {
+		it(`keeps flat items in the hand on ${target.id}`, () => {
+			const dyes = [
+				'black',
+				'blue',
+				'brown',
+				'cyan',
+				'gray',
+				'green',
+				'light_blue',
+				'lime',
+				'magenta',
+				'orange',
+				'pink',
+				'purple',
+				'red',
+				'silver',
+				'white',
+				'yellow',
+			];
+			const modernDyes = [
+				'black_dye',
+				'blue_dye',
+				'brown_dye',
+				'cyan_dye',
+				'gray_dye',
+				'green_dye',
+				'light_blue_dye',
+				'lime_dye',
+				'magenta_dye',
+				'orange_dye',
+				'pink_dye',
+				'purple_dye',
+				'red_dye',
+				'light_gray_dye',
+				'white_dye',
+				'yellow_dye',
+			];
+			const names = ['leather', 'beef', 'cooked_beef', ...dyes.map((dye) => `dye_${dye}`)];
+			const input: Zippable = {};
+			for (const name of names)
+				input[root + `models/item/${name}.json`] = json({
+					parent: 'builtin/generated',
+					textures: { layer0: `items/${name}` },
+					display: {
+						thirdperson: {
+							rotation: [-90, 0, 0],
+							translation: [0, 1, name === 'dye_pink' ? -2.5 : -3],
+							scale: [0.55, 0.55, 0.55],
+						},
+						firstperson: {
+							rotation: [0, -135, 25],
+							translation: [0, 4, 2],
+							scale: [1.7, 1.7, 1.7],
+						},
+					},
+				});
+			const files = unzipSync(convert(fixture(input), '1.8', target.id).zip);
+			for (const [index, name] of names.entries()) {
+				const mapped = target.id === '1.12.2' || index < 3 ? name : modernDyes[index - 3];
+				const model = parse(files[root + `models/item/${mapped}.json`]);
+				for (const hand of ['righthand', 'lefthand']) {
+					expect(model.display[`thirdperson_${hand}`]).toEqual({
+						rotation: [0, 0, 0],
+						translation: [0, 3, name === 'dye_pink' ? 1.5 : 1],
+						scale: [0.55, 0.55, 0.55],
+					});
+					expect(model.display[`firstperson_${hand}`].scale).toEqual([0.68, 0.68, 0.68]);
+				}
+				expect(model.display).not.toHaveProperty('thirdperson');
+			}
+		});
+		it(`keeps brick ingredients separate from building blocks on ${target.id}`, () => {
+			const files = unzipSync(
+				convert(
+					fixture({
+						[root + 'models/item/brick.json']: json({
+							parent: 'builtin/generated',
+							textures: { layer0: 'items/brick' },
+						}),
+						[root + 'models/item/brick_block.json']: json({ parent: 'block/brick' }),
+						[root + 'models/item/netherbrick.json']: json({
+							parent: 'builtin/generated',
+							textures: { layer0: 'items/netherbrick' },
+						}),
+						[root + 'models/item/nether_brick.json']: json({ parent: 'block/nether_brick' }),
+						[root + 'textures/items/brick.png']: png(16, 16, [10, 0, 0, 255]),
+						[root + 'textures/items/netherbrick.png']: png(16, 16, [20, 0, 0, 255]),
+						[root + 'models/item/custom.json']: json({
+							parent: 'item/brick',
+							overrides: [{ predicate: { damage: 0.5 }, model: 'item/brick_block' }],
+						}),
+					}),
+					'1.8',
+					target.id,
+				).zip,
+			);
+			const legacy = target.id === '1.12.2';
+			const prefix = target.level >= 11903 ? 'minecraft:' : '';
+			const folder = legacy ? 'items' : 'item';
+			for (const [ingredient, block, texture] of legacy
+				? [
+						['brick', 'brick_block', 'brick'],
+						['netherbrick', 'nether_brick', 'netherbrick'],
+					]
+				: [
+						['brick', 'bricks', 'brick'],
+						['nether_brick', 'nether_bricks', 'nether_brick'],
+					]) {
+				expect(parse(files[root + `models/item/${ingredient}.json`]).textures.layer0).toBe(
+					`${prefix}${folder}/${texture}`,
+				);
+				expect(parse(files[root + `models/item/${block}.json`]).parent).toBe(
+					`${prefix}block/${legacy ? (block === 'brick_block' ? 'brick' : 'nether_brick') : block}`,
+				);
+				expect(files[root + `textures/${folder}/${texture}.png`]).toBeDefined();
+				if (target.level >= 12104) {
+					expect(parse(files[root + `items/${ingredient}.json`]).model.model).toBe(
+						`minecraft:item/${ingredient}`,
+					);
+					expect(parse(files[root + `items/${block}.json`]).model.model).toBe(
+						`minecraft:item/${block}`,
+					);
+				}
+			}
+			const custom = parse(files[root + 'models/item/custom.json']);
+			const blockId = `${prefix}item/${legacy ? 'brick_block' : 'bricks'}`;
+			if (target.level >= 12104)
+				expect(parse(files[root + 'items/custom.json']).model.entries[0].model.model).toBe(blockId);
+			else expect(custom.overrides[0].model).toBe(blockId);
+			expect(custom.parent).toBe(`${prefix}item/brick`);
+		});
+	}
+	it('inherits generated defaults without a parent loop and preserves explicit modern hand poses', () => {
+		const pose = { rotation: [10, 20, 30], translation: [1, 2, 3], scale: [0.7, 0.7, 0.7] };
+		const files = unzipSync(
+			convert(
+				fixture({
+					[root + 'models/item/generated.json']: json({ parent: 'builtin/generated' }),
+					[root + 'models/item/leather.json']: json({ parent: 'minecraft:builtin/generated' }),
+					[root + 'models/item/custom.json']: json({
+						parent: 'item/generated',
+						display: {
+							thirdperson: { rotation: [-90, 0, 0] },
+							thirdperson_righthand: pose,
+							thirdperson_lefthand: pose,
+						},
+					}),
+				}),
+				'1.8',
+				'26.1',
+			).zip,
+		);
+		expect(parse(files[root + 'models/item/generated.json']).parent).toBe(
+			'minecraft:builtin/generated',
+		);
+		expect(parse(files[root + 'models/item/leather.json']).parent).toBe('minecraft:item/generated');
+		const model = parse(files[root + 'models/item/custom.json']);
+		expect(model.display.thirdperson_righthand).toEqual(pose);
+		expect(model.display.thirdperson_lefthand).toEqual(pose);
 	});
 	it('updates namespaced block-state references without double prefixes', () => {
 		const files = unzipSync(

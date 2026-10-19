@@ -60,11 +60,22 @@ function updateDisplay(display: JsonObject): JsonObject {
 					part.translation = vector(part.translation, [0.4, 0.4, 0.4], [1.13, 1.6, 0.33]);
 				if (part.scale) part.scale = vector(part.scale, [0.4, 0.4, 0.4], [0, 0, 0]);
 			} else {
-				if (part.rotation) part.rotation = vector(part.rotation, [1, -1, -1], [0, 0, 20]);
+				// 1.8 renders ordinary flat items with a different hand basis from tools.
+				// Preserve their texture-specific offsets relative to the modern flat pose.
+				const flat =
+					Array.isArray(part.rotation) &&
+					part.rotation.length === 3 &&
+					part.rotation.every((n, i) => n === [-90, 0, 0][i]);
+				if (part.rotation)
+					part.rotation = vector(part.rotation, [1, -1, -1], flat ? [90, 0, 0] : [0, 0, 20]);
 				if (part.translation)
-					part.translation = vector(part.translation, [1, 1, -1], [0, 2.75, -3]);
+					part.translation = vector(
+						part.translation,
+						flat ? [1, 1, 1] : [1, 1, -1],
+						flat ? [0, 2, 4] : [0, 2.75, -3],
+					);
 			}
-			out[`${mode}_righthand`] = part;
+			out[`${mode}_righthand`] ??= part;
 			delete out[mode];
 		}
 		out[`${mode}_righthand`] ??= structuredClone(displayData[`${mode}_righthand`]);
@@ -98,6 +109,11 @@ export function convertModels(pack: Pack, target: Target): void {
 		const json = pack.json(path);
 		if (!json) continue;
 		if (typeof json.parent === 'string') json.parent = resource(json.parent, 'model', target);
+		if (
+			/^(minecraft:)?builtin\/generated$/.test(String(json.parent)) &&
+			modelId(path) !== 'minecraft:item/generated'
+		)
+			json.parent = 'minecraft:item/generated';
 		if (isObject(json.textures)) {
 			for (const [key, value] of Object.entries(json.textures)) {
 				if (typeof value !== 'string') continue;
