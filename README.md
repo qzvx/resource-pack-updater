@@ -8,10 +8,12 @@ Everything runs locally in a Web Worker. Your pack is never uploaded to a server
 
 ## How to use
 
-1. Open the [site](https://resource-pack-updater.vercel.app/) and drop in your resource pack ZIP.
-2. The original version (1.7 or 1.8) is detected automatically.
-3. Pick the version you want to update to.
-4. Click **Update pack** and download the result.
+1. Open the [site](https://resource-pack-updater.vercel.app/) and drop in one or more resource pack ZIPs, or select them together in the file picker.
+2. The original version (1.7 or 1.8) is detected for each pack. You can override it per pack.
+3. Pick the version you want to update all selected packs to.
+4. Click **Update pack** or **Update packs** and download each result. When multiple packs are ready, **Download all packs** downloads each converted pack as a separate file.
+
+Packs convert one at a time. A failed pack does not stop the rest. Cancelling keeps completed downloads and lets you resume the remaining packs. Each input ZIP can be up to 256 MB.
 
 ## Supported versions
 

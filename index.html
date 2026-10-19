@@ -31,6 +31,7 @@
 								<input
 									type="file"
 									id="pack-file"
+									multiple
 									accept=".zip,application/zip,application/x-zip-compressed"
 								/>
 								<span class="upload-icon" aria-hidden="true">
@@ -38,11 +39,11 @@
 										<path d="M16 21V7m-5 5 5-5 5 5M6 21v5h20v-5" />
 									</svg>
 								</span>
-								<strong id="file-label">Drop your resource pack here</strong>
+								<strong id="file-label">Drop your resource packs here</strong>
 								<span id="file-description"
-									>or <span class="browse-text">browse files</span> to choose a ZIP</span
+									>or <span class="browse-text">browse files</span> to choose ZIPs</span
 								>
-								<span class="file-limit">ZIP, up to 256 MB</span>
+								<span class="file-limit">ZIP, up to 256 MB each</span>
 							</label>
 
 							<div id="selected-file" class="selected-file" hidden>
@@ -64,15 +65,6 @@
 							<div id="file-version-status" class="file-version-status" hidden>
 								<span id="detected-badge" class="detected-badge">Detected: 1.8</span>
 								<button type="button" id="override-btn" class="override-btn">wrong? use 1.7</button>
-								<a
-									id="detection-issue-link"
-									class="issue-link"
-									href="https://github.com/qzvx/resource-pack-updater/issues"
-									target="_blank"
-									rel="noopener noreferrer"
-									hidden
-									>Report a problem on GitHub</a
-								>
 							</div>
 						</div>
 
@@ -88,6 +80,8 @@
 							></div>
 						</div>
 					</div>
+
+					<ul id="pack-list" class="pack-list" aria-label="Selected packs" hidden></ul>
 
 					<div id="action-area" class="action-area">
 						<button id="convert" class="primary-button" type="button" disabled>
@@ -112,6 +106,7 @@
 					<div id="error" class="error-message" role="alert" hidden>
 						<span id="error-text"></span>
 						<a
+							id="error-issue-link"
 							class="issue-link"
 							href="https://github.com/qzvx/resource-pack-updater/issues"
 							target="_blank"
@@ -124,7 +119,7 @@
 						<div class="result-top">
 							<span class="success-icon" aria-hidden="true">✓</span>
 							<div>
-								<h2 id="result-title">Your pack is ready.</h2>
+								<h2 id="result-title" tabindex="-1">Your pack is ready.</h2>
 								<p id="result-description"></p>
 							</div>
 						</div>
@@ -133,13 +128,6 @@
 							<details>
 								<summary id="notes-summary"></summary>
 								<ul id="warning-list"></ul>
-								<a
-									class="issue-link"
-									href="https://github.com/qzvx/resource-pack-updater/issues"
-									target="_blank"
-									rel="noopener noreferrer"
-									>Report a problem on GitHub</a
-								>
 							</details>
 						</div>
 						<div class="download-actions">
@@ -149,6 +137,12 @@
 									<path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5" />
 								</svg>
 							</a>
+							<button id="download-all" class="primary-button" type="button" hidden>
+								<span id="download-all-label">Download all packs</span>
+								<svg viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5" />
+								</svg>
+							</button>
 							<button id="start-again" class="text-button" type="button">Convert another</button>
 						</div>
 					</section>

@@ -612,6 +612,75 @@ progress::-moz-progress-bar {
 	color: var(--accent);
 }
 
+.pack-list {
+	list-style: none;
+	margin: 0;
+	padding: 0 22px 18px;
+	display: grid;
+	gap: 10px;
+}
+
+.pack-row {
+	min-width: 0;
+	padding: 12px;
+	background: var(--panel-inner);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+}
+
+.pack-row-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.pack-row-name {
+	min-width: 0;
+	font-size: 12.5px;
+	overflow-wrap: anywhere;
+}
+
+.pack-size {
+	color: var(--text-muted);
+	font-size: 11px;
+}
+
+.pack-detail {
+	margin-top: 8px;
+	font-size: 12px;
+	color: var(--error-text);
+	overflow-wrap: anywhere;
+}
+
+.pack-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-top: 10px;
+}
+
+.pack-download {
+	color: var(--accent-text);
+	font-size: 12px;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.progress-top {
+	gap: 12px;
+}
+
+#progress-stage {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+#progress-percent {
+	flex-shrink: 0;
+}
+
 .error-message .issue-link {
 	display: block;
 	margin-top: 6px;
