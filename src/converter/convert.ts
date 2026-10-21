@@ -7,6 +7,7 @@ import { sliceAtlases } from './slices';
 import { modernAssets, convertAtlases } from './modern';
 import { convertSigns } from './signs';
 import { convertCactus } from './cactus';
+import { createNetherite } from './netherite';
 import { getTarget, type SourceVersion } from './versions';
 import type { Progress } from './types';
 
@@ -28,6 +29,7 @@ export function convert(
 		[
 			'Converting models and block states',
 			() => {
+				createNetherite(pack, target);
 				convertModels(pack, target);
 				convertBlockstates(pack, target);
 				convertCactus(pack, target);

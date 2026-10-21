@@ -13,6 +13,8 @@ Everything runs locally in a Web Worker. Your pack is never uploaded to a server
 3. Pick the version you want to update all selected packs to.
 4. Click **Update pack** or **Update packs** and download each result. When multiple packs are ready, **Download all packs** downloads each converted pack as a separate file.
 
+For targets 1.16 and newer, netherite tools and armor automatically use retinted copies of your pack's diamond artwork. This keeps texture resolution, transparency, animation metadata, custom item geometry, and hand transforms. The tint uses a charcoal-purple palette and keeps brown tool handles. Both inventory armor icons and worn armor layers are supported. Existing netherite assets stay unchanged. Only artwork present in the pack is retinted; missing assets still use the target game's defaults.
+
 Packs convert one at a time. A failed pack does not stop the rest. Cancelling keeps completed downloads and lets you resume the remaining packs. Each input ZIP can be up to 256 MB.
 
 ## Supported versions

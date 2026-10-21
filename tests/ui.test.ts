@@ -495,6 +495,10 @@ describe('multiple packs', () => {
 		expect(element('convert').disabled).toBe(false);
 	});
 
+	it('does not expose a netherite setting', () => {
+		expect(elements.has('netherite-from-diamond')).toBe(false);
+	});
+
 	it('releases download URLs when starting over', () => {
 		chooseFiles('first.zip', 'second.zip');
 		completeInspection();
