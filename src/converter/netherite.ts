@@ -13,15 +13,29 @@ const PALETTE = [
 	[126, 113, 126],
 ];
 
-export function retintNetherite(image: Raster, preserveHandles: boolean): Raster {
+export function retintNetherite(
+	image: Raster,
+	preserveHandles: boolean,
+	frame: Pick<Raster, 'width' | 'height'> = image,
+): Raster {
 	const output = { ...image, data: image.data.slice() };
 	for (let offset = 0; offset < output.data.length; offset += 4) {
 		if (!image.data[offset + 3]) continue;
 		const red = image.data[offset];
 		const green = image.data[offset + 1];
 		const blue = image.data[offset + 2];
-		if (preserveHandles && red > green * 1.08 && green > blue * 1.1 && red > blue * 1.2) continue;
-		const shade = ((red * 0.2126 + green * 0.7152 + blue * 0.0722) / 255) * 3;
+		const brightness = Math.max(red, green, blue);
+		const chroma = brightness - Math.min(red, green, blue);
+		if (brightness <= 48 && chroma <= 16) continue;
+		if (preserveHandles && red > green && green > blue && chroma > 16) {
+			const hue = (green - blue) / (red - blue);
+			const pixel = offset / 4;
+			const column = (pixel % image.width) % frame.width;
+			const row = Math.floor(pixel / image.width) % frame.height;
+			if (hue >= 0.25 && hue <= 0.75 && column < frame.width / 2 && row >= frame.height / 2)
+				continue;
+		}
+		const shade = (brightness / 255) * 3;
 		const lower = Math.min(2, Math.floor(shade));
 		for (let channel = 0; channel < 3; channel++)
 			output.data[offset + channel] = Math.round(
@@ -37,12 +51,36 @@ const assetPath = (id: string, folder: string, extension: string): string => {
 	return `assets/${namespace}/${folder}/${name}${extension}`;
 };
 
+function animationFrame(image: Raster, metadata: unknown): Pick<Raster, 'width' | 'height'> {
+	if (!isObject(metadata) || !isObject(metadata.animation)) return image;
+	const { width, height } = metadata.animation;
+	const specifiedWidth = typeof width === 'number' && Number.isInteger(width) && width > 0;
+	const specifiedHeight = typeof height === 'number' && Number.isInteger(height) && height > 0;
+	const size = Math.min(image.width, image.height);
+	const frame = {
+		width: specifiedWidth ? width : specifiedHeight ? image.width : size,
+		height: specifiedHeight ? height : specifiedWidth ? image.height : size,
+	};
+	return image.width % frame.width === 0 && image.height % frame.height === 0 ? frame : image;
+}
+
 function copyTexture(pack: Pack, from: string, to: string, preserveHandles: boolean): boolean {
 	const bytes = pack.files.get(from);
 	if (!bytes || pack.files.has(to)) return false;
 	try {
-		savePng(pack, to, retintNetherite(readPng(bytes), preserveHandles));
+		const image = readPng(bytes);
 		const metadata = pack.files.get(from + '.mcmeta');
+		let frame: Pick<Raster, 'width' | 'height'> = image;
+		if (metadata)
+			try {
+				frame = animationFrame(
+					image,
+					JSON.parse(pack.text(from + '.mcmeta').replace(/^\uFEFF/, '')),
+				);
+			} catch {
+				frame = image;
+			}
+		savePng(pack, to, retintNetherite(image, preserveHandles, frame));
 		if (metadata && !pack.files.has(to + '.mcmeta')) pack.set(to + '.mcmeta', metadata);
 		return true;
 	} catch {

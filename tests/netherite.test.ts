@@ -39,7 +39,47 @@ function fixture(extra: Zippable = {}): Uint8Array {
 }
 
 describe('netherite pixels', () => {
-	it('keeps shapes, transparency, shading, and brown handles without modifying diamond', () => {
+	for (const color of [
+		[200, 50, 45],
+		[200, 100, 30],
+		[200, 180, 40],
+		[50, 200, 70],
+		[30, 170, 200],
+		[70, 45, 200],
+		[200, 50, 180],
+		[120, 80, 40],
+	])
+		it(`retints ${color.join('/')} blades without changing the grip or dark outlines`, () => {
+			const image: Raster = { width: 4, height: 4, data: new Uint8Array(64) };
+			image.data.set([...color, 180], 3 * 4);
+			image.data.set([38, 6, 4, 255], 7 * 4);
+			image.data.set([120, 80, 40, 255], 12 * 4);
+			image.data.set([180, 48, 42, 255], 13 * 4);
+			image.data.set([22, 20, 28, 255], 6 * 4);
+			const output = retintNetherite(image, true);
+			const metal = output.data.slice(3 * 4, 4 * 4);
+			expect(metal).not.toEqual(image.data.slice(3 * 4, 4 * 4));
+			expect(metal[2]).toBeGreaterThan(metal[0]);
+			expect(metal[0]).toBeGreaterThan(metal[1]);
+			expect(metal[3]).toBe(180);
+			expect(output.data.slice(7 * 4, 8 * 4)).not.toEqual(image.data.slice(7 * 4, 8 * 4));
+			expect(output.data.slice(12 * 4, 13 * 4)).toEqual(image.data.slice(12 * 4, 13 * 4));
+			expect(output.data.slice(13 * 4, 14 * 4)).not.toEqual(image.data.slice(13 * 4, 14 * 4));
+			expect(output.data.slice(6 * 4, 7 * 4)).toEqual(image.data.slice(6 * 4, 7 * 4));
+		});
+
+	it('uses brightness consistently across differently colored diamond materials', () => {
+		const image: Raster = {
+			width: 3,
+			height: 1,
+			data: new Uint8Array([200, 50, 45, 255, 45, 200, 50, 255, 45, 50, 200, 255]),
+		};
+		const output = retintNetherite(image, false);
+		expect(output.data.slice(0, 4)).toEqual(output.data.slice(4, 8));
+		expect(output.data.slice(0, 4)).toEqual(output.data.slice(8, 12));
+	});
+
+	it('keeps shapes, transparency, and shading without modifying diamond', () => {
 		const pixels = [
 			[10, 60, 70, 255],
 			[40, 150, 180, 128],
@@ -55,18 +95,61 @@ describe('netherite pixels', () => {
 		for (const index of [0, 1, 2]) {
 			const [red, green, blue, alpha] = output.data.slice(index * 4, index * 4 + 4);
 			expect(alpha).toBe(pixels[index][3]);
-			expect(blue).toBeGreaterThan(red);
+			expect(blue).toBeGreaterThanOrEqual(red);
 			expect(red).toBeGreaterThan(green);
 			expect(red).toBeLessThan(pixels[index][1]);
 		}
 		expect(output.data[0]).toBeLessThan(output.data[4]);
 		expect(output.data[4]).toBeLessThan(output.data[8]);
-		expect([...output.data.slice(12)]).toEqual(pixels.slice(3).flat());
-		expect(retintNetherite(image, false).data.slice(12, 15)).not.toEqual(image.data.slice(12, 15));
+		expect([...output.data.slice(16)]).toEqual(pixels[4]);
+		expect(output.data.slice(12, 15)).not.toEqual(image.data.slice(12, 15));
 	});
 });
 
 describe('netherite conversion', () => {
+	for (const layout of [
+		{ width: 16, height: 32, frameWidth: 16, frameHeight: 16, animation: { frametime: 3 } },
+		{ width: 32, height: 16, frameWidth: 16, frameHeight: 16, animation: { frametime: 3 } },
+		{ width: 32, height: 32, frameWidth: 8, frameHeight: 16, animation: { width: 8, height: 16 } },
+		{ width: 32, height: 16, frameWidth: 8, frameHeight: 16, animation: { width: 8 } },
+		{ width: 16, height: 32, frameWidth: 16, frameHeight: 8, animation: { height: 8 } },
+	])
+		it(`locates grips independently in each ${layout.frameWidth}x${layout.frameHeight} animation frame of ${layout.width}x${layout.height}`, () => {
+			const data = new Uint8Array(layout.width * layout.height * 4);
+			const blades: number[] = [];
+			const grips: number[] = [];
+			for (let row = 0; row < layout.height; row += layout.frameHeight)
+				for (let column = 0; column < layout.width; column += layout.frameWidth) {
+					const blade = ((row + 1) * layout.width + column + layout.frameWidth - 2) * 4;
+					const grip = ((row + layout.frameHeight - 2) * layout.width + column + 1) * 4;
+					data.set([120, 80, 40, 160], blade);
+					data.set([120, 80, 40, 255], grip);
+					blades.push(blade);
+					grips.push(grip);
+				}
+			const texture = encode({ width: layout.width, height: layout.height, data, channels: 4 });
+			const metadata = json({ animation: layout.animation });
+			const files = unzipSync(
+				convert(
+					fixture({
+						[root + 'textures/items/diamond_sword.png']: texture,
+						[root + 'textures/items/diamond_sword.png.mcmeta']: metadata,
+					}),
+					'1.8',
+					'26.3',
+				).zip,
+			);
+			const output = readPng(files[root + 'textures/item/netherite_sword.png']);
+			for (const offset of blades) {
+				expect(output.data[offset + 2]).toBeGreaterThan(output.data[offset]);
+				expect(output.data[offset + 3]).toBe(160);
+			}
+			for (const offset of grips)
+				expect([...output.data.slice(offset, offset + 4)]).toEqual([120, 80, 40, 255]);
+			expect(files[root + 'textures/item/diamond_sword.png']).toEqual(texture);
+			expect(files[root + 'textures/item/netherite_sword.png.mcmeta']).toEqual(metadata);
+		});
+
 	for (const source of ['1.7', '1.8'] as SourceVersion[])
 		for (const target of TARGETS)
 			it(`generates matching items and worn armor from ${source} to ${target.id}`, () => {

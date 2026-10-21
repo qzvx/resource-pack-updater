@@ -61,7 +61,12 @@ function slice(
 			// Skip sprites added after the source edition. Empty pixels should not
 			// override the target game's vanilla art.
 			const crop = sheet.crop(b.x, b.y, b.width, b.height);
-			if (!crop.data.some((alpha, i) => i % 4 === 3 && alpha > 0)) continue;
+			const crosshair = texture.path === 'sprites/hud/crosshair.png';
+			if (crosshair)
+				for (let offset = 0; offset < crop.data.length; offset += 4)
+					if (crop.data[offset] === 0 && crop.data[offset + 1] === 0 && crop.data[offset + 2] === 0)
+						crop.data[offset + 3] = 0;
+			if (!crosshair && !crop.data.some((alpha, i) => i % 4 === 3 && alpha > 0)) continue;
 			savePng(pack, root + texture.path, crop);
 			if (metadata && texture.metadata)
 				pack.write(
