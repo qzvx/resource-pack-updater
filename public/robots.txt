@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://resource-pack-updater.vercel.app/sitemap.xml
